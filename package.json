@@ -8,11 +8,11 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "start:prod": "npm run build && node dist/server.js",
 
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio",
-
     "prisma:seed": "tsx prisma/seed.ts"
   },
   "prisma": {
@@ -48,6 +48,6 @@
     "typescript": "^5.3.3"
   },
   "keywords": [],
-  "author": "",
+  "author": "Mc Zaldy Yap",
   "license": "ISC"
 }
