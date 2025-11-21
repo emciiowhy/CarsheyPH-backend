@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { PrismaClient, Prisma } from "@prisma/client";
 import slugify from "slugify";
 

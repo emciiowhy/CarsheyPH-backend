@@ -9,7 +9,6 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "start:prod": "npm run build && node dist/server.js",
-
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio",
