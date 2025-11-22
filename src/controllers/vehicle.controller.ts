@@ -425,7 +425,7 @@ export const deleteVehicle = async (req: Request, res: Response) => {
         await prisma.vehicle.delete({ where: { id } });
 
         getIO().emit("vehicle:deleted", { id });
-       getIO().to(`vehicle:${id}`).emit("vehicle:deleted", { id });
+        getIO().to(`vehicle:${id}`).emit("vehicle:deleted", { id });
         getIO().to("admin").emit("admin:vehicles", {
             type: "deleted",
             id,
