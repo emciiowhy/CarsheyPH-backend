@@ -14,28 +14,24 @@ import {
   rateLimiter,
   sanitizeInput,
   errorHandler,
-} from "./middleware/security";
+} from "./middleware/security.js";
 
 // Routes
-import vehicleRoutes from "./routes/vehicle.routes";
-import categoryRoutes from "./routes/category.routes";
-import inquiryRoutes from "./routes/inquiry.routes";
-import testDriveRoutes from "./routes/testDrive.routes";
-import financingRoutes from "./routes/financing.routes";
-import tradeInRoutes from "./routes/tradeIn.routes";
-import promotionRoutes from "./routes/promotion.routes";
-
-// ⭐ Upload route
-import uploadRoutes from "./routes/upload.routes";
-
-// ⭐ NEW → Branch routes
+import vehicleRoutes from "./routes/vehicle.routes.js";
+import categoryRoutes from "./routes/category.routes.js";
+import inquiryRoutes from "./routes/inquiry.routes.js";
+import testDriveRoutes from "./routes/testDrive.routes.js";
+import financingRoutes from "./routes/financing.routes.js";
+import tradeInRoutes from "./routes/tradeIn.routes.js";
+import promotionRoutes from "./routes/promotion.routes.js";
+import uploadRoutes from "./routes/upload.routes.js";
 import branchRoutes from "./routes/branch.routes.js";
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 
 // ----------------------------------------
 // HTTP SERVER → Required for Socket.io
@@ -47,7 +43,7 @@ const server = http.createServer(app);
 // ----------------------------------------
 export const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000"],
+    origin: process.env.CLIENT_URL?.split(",") || ["http://localhost:3000"],
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -56,28 +52,12 @@ export const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("🟢 Client connected:", socket.id);
 
-  socket.on("message", (data) => {
-    console.log("📩 Message received:", data);
-  });
+  socket.on("message", (data) => console.log("📩 Message received:", data));
+  socket.on("join-user", (userId: string) => socket.join(`user_${userId}`));
+  socket.on("join-vehicle", (vehicleId: string) => socket.join(`vehicle_${vehicleId}`));
+  socket.on("leave-vehicle", (vehicleId: string) => socket.leave(`vehicle_${vehicleId}`));
 
-  socket.on("join-user", (userId: string) => {
-    socket.join(`user_${userId}`);
-    console.log(`👤 User room joined: user_${userId}`);
-  });
-
-  socket.on("join-vehicle", (vehicleId: string) => {
-    socket.join(`vehicle_${vehicleId}`);
-    console.log(`🚗 Joined vehicle room: vehicle_${vehicleId}`);
-  });
-
-  socket.on("leave-vehicle", (vehicleId: string) => {
-    socket.leave(`vehicle_${vehicleId}`);
-    console.log(`🚙 Left vehicle room: vehicle_${vehicleId}`);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("🔴 Client disconnected:", socket.id);
-  });
+  socket.on("disconnect", () => console.log("🔴 Client disconnected:", socket.id));
 });
 
 // ----------------------------------------
@@ -89,14 +69,10 @@ app.use("/api", rateLimiter(100, 15 * 60 * 1000));
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-
 app.use(sanitizeInput);
 
-app.use(
-  process.env.NODE_ENV === "development"
-    ? morgan("dev")
-    : morgan("combined")
-);
+if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+else app.use(morgan("combined"));
 
 // ----------------------------------------
 // HEALTH CHECK
@@ -109,10 +85,8 @@ app.get("/health", (_req, res) => {
   });
 });
 
-// Simple test route
-app.get("/", (_req, res) => {
-  res.send("Backend running with Socket.io enabled");
-});
+// Simple root test
+app.get("/", (_req, res) => res.send("Backend running with Socket.io enabled"));
 
 // ----------------------------------------
 // ROUTES
@@ -124,25 +98,16 @@ app.use("/api/test-drives", testDriveRoutes);
 app.use("/api/financing", financingRoutes);
 app.use("/api/trade-ins", tradeInRoutes);
 app.use("/api/promotions", promotionRoutes);
-
-// ⭐ Upload route
 app.use("/api/upload", uploadRoutes);
-
-// ⭐ NEW — Branches route
 app.use("/api/branches", branchRoutes);
 
-// ⭐ Serve static uploaded images
+// Serve static uploads
 app.use("/uploads", express.static("uploads"));
 
-// 404
-app.use((_req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "Route not found",
-  });
-});
+// 404 Handler
+app.use((_req, res) => res.status(404).json({ success: false, message: "Route not found" }));
 
-// Error Handler
+// Error handler
 app.use(errorHandler);
 
 // ----------------------------------------

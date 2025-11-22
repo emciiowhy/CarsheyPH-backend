@@ -2,13 +2,14 @@
 // backend/src/routes/tradeIn.routes.ts
 // ============================================
 
-import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Router } from "express";
+import { PrismaClient } from "@prisma/client";
 
 const router = Router();
 const prisma = new PrismaClient();
 
-router.post('/', async (req, res) => {
+// Create a new trade-in request
+router.post("/", async (req, res) => {
   try {
     const tradeIn = await prisma.tradeIn.create({
       data: req.body,

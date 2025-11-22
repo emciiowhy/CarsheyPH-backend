@@ -1,8 +1,10 @@
+// ============================================
 // backend/src/routes/category.routes.ts
+// ============================================
 
-import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
-import { authenticateUser, requireAdmin } from '../middleware/auth';
+import { Router } from "express";
+import { PrismaClient } from "@prisma/client";
+import { authenticateUser, requireAdmin } from "../middleware/auth";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -12,15 +14,11 @@ const prisma = new PrismaClient();
 // ============================================
 
 // GET all categories
-router.get('/', async (req, res) => {
+router.get("/", async (_req, res) => {
   try {
     const categories = await prisma.category.findMany({
-      orderBy: { order: 'asc' },
-      include: {
-        _count: {
-          select: { vehicles: true },
-        },
-      },
+      orderBy: { order: "asc" },
+      include: { _count: { select: { vehicles: true } } },
     });
 
     res.json({ success: true, data: categories });
@@ -30,24 +28,16 @@ router.get('/', async (req, res) => {
 });
 
 // GET category by slug
-router.get('/:slug', async (req, res) => {
+router.get("/:slug", async (req, res) => {
   try {
     const { slug } = req.params;
-
     const category = await prisma.category.findUnique({
       where: { slug },
-      include: {
-        _count: {
-          select: { vehicles: true },
-        },
-      },
+      include: { _count: { select: { vehicles: true } } },
     });
 
     if (!category) {
-      return res.status(404).json({
-        success: false,
-        message: 'Category not found',
-      });
+      return res.status(404).json({ success: false, message: "Category not found" });
     }
 
     res.json({ success: true, data: category });
@@ -61,18 +51,11 @@ router.get('/:slug', async (req, res) => {
 // ============================================
 
 // CREATE category
-router.post('/', authenticateUser, requireAdmin, async (req, res) => {
+router.post("/", authenticateUser, requireAdmin, async (req, res) => {
   try {
     const { name, slug, description, icon, order } = req.body;
-
     const category = await prisma.category.create({
-      data: {
-        name,
-        slug,
-        description,
-        icon,
-        order: order || 0,
-      },
+      data: { name, slug, description, icon, order: order || 0 },
     });
 
     res.status(201).json({ success: true, data: category });
@@ -82,14 +65,10 @@ router.post('/', authenticateUser, requireAdmin, async (req, res) => {
 });
 
 // UPDATE category
-router.put('/:id', authenticateUser, requireAdmin, async (req, res) => {
+router.put("/:id", authenticateUser, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-
-    const category = await prisma.category.update({
-      where: { id },
-      data: req.body,
-    });
+    const category = await prisma.category.update({ where: { id }, data: req.body });
 
     res.json({ success: true, data: category });
   } catch (error: any) {
@@ -98,18 +77,15 @@ router.put('/:id', authenticateUser, requireAdmin, async (req, res) => {
 });
 
 // DELETE category
-router.delete('/:id', authenticateUser, requireAdmin, async (req, res) => {
+router.delete("/:id", authenticateUser, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
+    await prisma.category.delete({ where: { id } });
 
-    await prisma.category.delete({
-      where: { id },
-    });
-
-    res.json({ success: true, message: 'Category deleted successfully' });
+    res.json({ success: true, message: "Category deleted successfully" });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
-export default router;
+export default router; // ESM-friendly export

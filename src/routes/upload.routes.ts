@@ -1,3 +1,7 @@
+// ============================================
+// backend/src/routes/upload.routes.ts
+// ============================================
+
 import { Router } from "express";
 import multer from "multer";
 import path from "path";
@@ -6,10 +10,10 @@ const router = Router();
 
 // Configure file storage
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination(req, file, cb) {
     cb(null, path.join(process.cwd(), "uploads"));
   },
-  filename: function (req, file, cb) {
+  filename(req, file, cb) {
     const ext = path.extname(file.originalname);
     const unique = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(null, unique + ext);

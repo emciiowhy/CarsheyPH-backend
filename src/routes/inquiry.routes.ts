@@ -2,13 +2,14 @@
 // backend/src/routes/inquiry.routes.ts
 // ============================================
 
-import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Router } from "express";
+import { PrismaClient } from "@prisma/client";
 
 const router = Router();
 const prisma = new PrismaClient();
 
-router.post('/', async (req, res) => {
+// Create a new inquiry
+router.post("/", async (req, res) => {
   try {
     const { firstName, lastName, email, phone, type, vehicleId, subject, message } = req.body;
 
@@ -31,4 +32,4 @@ router.post('/', async (req, res) => {
   }
 });
 
-export default router;
+export default router; // Required for proper ESM import

@@ -1,10 +1,13 @@
 # Node
 node_modules/
-dist/
+
 
 # Environment
 .env
 .env.local
+dist/
+prisma/seed.js
+prisma/seed.js.map
 
 # Logs
 logs/

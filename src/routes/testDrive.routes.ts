@@ -4,11 +4,12 @@
 
 import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { authenticateUser } from '../middleware/auth';
+import { authenticateUser } from '../middleware/auth.js'; // ✅ add .js
 
 const router = Router();
 const prisma = new PrismaClient();
 
+// Protect all routes
 router.use(authenticateUser);
 
 router.post('/', async (req, res) => {

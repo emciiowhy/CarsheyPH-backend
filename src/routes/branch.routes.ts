@@ -1,10 +1,14 @@
+// ============================================
+// backend/src/routes/branch.routes.ts
+// ============================================
+
 import { Router } from "express";
-import prisma from "../lib/prisma.js";
+import prisma from "../lib/prisma";
 
 const router = Router();
 
-// GET /api/branches
-router.get("/", async (req, res, next) => {
+// GET all branches with dealership and inventory
+router.get("/", async (_req, res, next) => {
   try {
     const branches = await prisma.branch.findMany({
       include: {
@@ -13,13 +17,10 @@ router.get("/", async (req, res, next) => {
       },
     });
 
-    res.json({
-      success: true,
-      data: branches,
-    });
-  } catch (err) {
-    next(err);
+    res.json({ success: true, data: branches });
+  } catch (error: any) {
+    next(error);
   }
 });
 
-export default router;
+export default router; // ESM-friendly export

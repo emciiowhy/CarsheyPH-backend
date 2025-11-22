@@ -8,18 +8,23 @@ import {
   createVehicle,
   updateVehicle,
   deleteVehicle,
-} from '../controllers/vehicle.controller';
-import { validateRequired } from '../middleware/security';
+} from '../controllers/vehicle.controller.js'; // <- add .js for ESM
+
+import { validateRequired } from '../middleware/security.js'; // <- add .js for ESM
 
 const router = Router();
 
+// ============================
 // PUBLIC ROUTES
+// ============================
 router.get('/', getAllVehicles);
 router.get('/featured', getFeaturedVehicles);
 router.get('/search', searchVehicles);
 router.get('/:slug', getVehicleBySlug);
 
+// ============================
 // ADMIN ROUTES
+// ============================
 router.post(
   '/',
   validateRequired([

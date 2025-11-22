@@ -2,13 +2,14 @@
 // backend/src/routes/financing.routes.ts
 // ============================================
 
-import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Router } from "express";
+import { PrismaClient } from "@prisma/client";
 
 const router = Router();
 const prisma = new PrismaClient();
 
-router.post('/', async (req, res) => {
+// Create a new financing application
+router.post("/", async (req, res) => {
   try {
     const application = await prisma.financingApplication.create({
       data: req.body,
@@ -20,4 +21,4 @@ router.post('/', async (req, res) => {
   }
 });
 
-export default router;
+export default router; // Ensures proper ESM import after TS compilation
