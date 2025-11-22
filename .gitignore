@@ -1,3 +1,4 @@
+cat > .gitignore << 'EOF'
 # ============================================
 # Node Modules
 # ============================================
@@ -21,7 +22,6 @@ build/
 # ============================================
 prisma/seed.js
 prisma/seed.js.map
-prisma/migrations/
 
 # DO NOT ignore .prisma, .prisma/client, @prisma, prisma-engines
 
@@ -49,3 +49,4 @@ Thumbs.db
 # Coverage
 # ============================================
 coverage/
+EOF
