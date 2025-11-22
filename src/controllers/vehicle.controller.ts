@@ -3,8 +3,8 @@
 import { Request, Response } from 'express';
 import prisma from '../lib/prisma.js';
 import { Prisma } from '@prisma/client';
-import { io } from '../server';
 import slugify from "slugify";   // ✅ ADD SLUGIFY
+import { getIO } from '../lib/socket.js';
 
 // ============================================
 // GET ALL VEHICLES
@@ -304,8 +304,8 @@ export const createVehicle = async (req: Request, res: Response) => {
             },
         });
 
-        io.emit("vehicle:created", vehicle);
-        io.to("admin").emit("admin:vehicles", {
+        getIO().emit("vehicle:created", vehicle);
+        getIO().to("admin").emit("admin:vehicles", {
             type: "created",
             vehicle,
         });
@@ -384,9 +384,9 @@ export const updateVehicle = async (req: Request, res: Response) => {
             },
         });
 
-        io.emit("vehicle:updated", updated);
-        io.to(`vehicle:${id}`).emit("vehicle:updated", updated);
-        io.to("admin").emit("admin:vehicles", {
+        getIO().emit("vehicle:updated", updated);
+        getIO().to(`vehicle:${id}`).emit("vehicle:updated", updated);
+        getIO().to("admin").emit("admin:vehicles", {
             type: "updated",
             vehicle: updated,
         });
@@ -424,9 +424,9 @@ export const deleteVehicle = async (req: Request, res: Response) => {
 
         await prisma.vehicle.delete({ where: { id } });
 
-        io.emit("vehicle:deleted", { id });
-        io.to(`vehicle:${id}`).emit("vehicle:deleted", { id });
-        io.to("admin").emit("admin:vehicles", {
+        getIO().emit("vehicle:deleted", { id });
+       getIO().to(`vehicle:${id}`).emit("vehicle:deleted", { id });
+        getIO().to("admin").emit("admin:vehicles", {
             type: "deleted",
             id,
         });

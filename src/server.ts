@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import { initSocket } from "./lib/socket.js";
 
 // Security middleware
 import {
@@ -33,33 +34,11 @@ dotenv.config();
 const app = express();
 const PORT = Number(process.env.PORT) || 5000;
 
+
 // ----------------------------------------
 // HTTP SERVER → Required for Socket.io
 // ----------------------------------------
 const server = http.createServer(app);
-
-// ----------------------------------------
-// SOCKET.IO SETUP
-// ----------------------------------------
-export const io = new Server(server, {
-  cors: {
-    origin: process.env.CLIENT_URL?.split(",") || ["http://localhost:3000"],
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
-
-io.on("connection", (socket) => {
-  console.log("🟢 Client connected:", socket.id);
-
-  socket.on("message", (data) => console.log("📩 Message received:", data));
-  socket.on("join-user", (userId: string) => socket.join(`user_${userId}`));
-  socket.on("join-vehicle", (vehicleId: string) => socket.join(`vehicle_${vehicleId}`));
-  socket.on("leave-vehicle", (vehicleId: string) => socket.leave(`vehicle_${vehicleId}`));
-
-  socket.on("disconnect", () => console.log("🔴 Client disconnected:", socket.id));
-});
-
 // ----------------------------------------
 // EXPRESS MIDDLEWARE
 // ----------------------------------------
