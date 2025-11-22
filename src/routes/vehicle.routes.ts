@@ -1,5 +1,6 @@
 // backend/src/routes/vehicle.routes.ts
 import { Router } from 'express';
+import prisma from "../lib/prisma.js";
 import {
   getAllVehicles,
   getVehicleBySlug,

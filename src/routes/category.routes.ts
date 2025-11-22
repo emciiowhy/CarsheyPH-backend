@@ -3,12 +3,10 @@
 // ============================================
 
 import { Router } from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../lib/prisma.js";
 import { authenticateUser, requireAdmin } from "../middleware/auth.js";
 
-
 const router = Router();
-const prisma = new PrismaClient();
 
 // ============================================
 // PUBLIC ROUTES
@@ -89,4 +87,4 @@ router.delete("/:id", authenticateUser, requireAdmin, async (req, res) => {
   }
 });
 
-export default router; // ESM-friendly export
+export default router;

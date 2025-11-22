@@ -3,6 +3,7 @@
 // ============================================
 
 import { Router } from "express";
+import prisma from "../lib/prisma.js";
 import multer from "multer";
 import path from "path";
 
