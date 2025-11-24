@@ -20,8 +20,8 @@ if (!connectionString) {
 // Create Pool instance
 const pool = new Pool({ connectionString });
 
-// Create Prisma adapter
-// @ts-expect-error - Type mismatch in @prisma/adapter-neon v7
+// Create Prisma adapter - suppress type error
+// @ts-ignore
 const adapter = new PrismaNeon(pool);
 
 // Create Prisma client

@@ -32,6 +32,8 @@ import branchRoutes from "./routes/branch.routes.js";
 dotenv.config();
 
 const app = express();
+// Add this right after creating your Express app
+app.set('trust proxy', 1); // Trust first proxy (Render's proxy)
 const PORT = Number(process.env.PORT) || 5000;
 
 
@@ -42,6 +44,7 @@ const server = http.createServer(app);
 // ----------------------------------------
 // EXPRESS MIDDLEWARE
 // ----------------------------------------
+
 app.use(securityHeaders);
 app.use(cors(corsOptions));
 app.use("/api", rateLimiter(100, 15 * 60 * 1000));
