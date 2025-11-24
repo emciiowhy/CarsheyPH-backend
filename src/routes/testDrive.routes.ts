@@ -52,4 +52,4 @@ router.get('/my-bookings', async (req, res) => {
     }
 });
 
-export default router;
+module.exports = router;

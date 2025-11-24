@@ -20,4 +20,4 @@ router.post("/", async (req, res) => {
   }
 });
 
-export default router; // Ensures proper ESM import after TS compilation
+module.exports = router; // Ensures proper ESM import after TS compilation

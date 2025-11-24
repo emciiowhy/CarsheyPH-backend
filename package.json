@@ -9,10 +9,14 @@
     "build": "npx prisma generate && tsc",
     "start": "node dist/server.js",
     "start:prod": "npm run build && node dist/server.js",
+
     "prisma:generate": "node --no-warnings ./node_modules/prisma/build/index.js generate",
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio",
-    "prisma:seed": "tsx prisma/seed.ts"
+    "prisma:seed": "tsx prisma/seed.ts",
+
+    "lint": "eslint . --ext .ts",
+    "check": "npm run lint && tsc --noEmit"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -48,6 +52,9 @@
     "@types/multer": "^2.0.0",
     "@types/node": "^24.10.1",
     "@types/ws": "^8.18.1",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
+    "eslint": "^9.39.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
   },

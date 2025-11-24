@@ -1,14 +1,13 @@
 // backend/src/middleware/security.ts
 
-import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
-import xss from 'xss-clean';
-import hpp from 'hpp';
-import cors from 'cors';
-import { Request, Response, NextFunction } from 'express';
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import xss from "xss-clean";
+import hpp from "hpp";
+import { Request, Response, NextFunction } from "express";
 
 // --------------------------------------------------
-// SECURITY HEADERS (Helmet) — FIXED CSP
+// HELMET SECURITY HEADERS
 // --------------------------------------------------
 export const securityHeaders = helmet({
   contentSecurityPolicy: {
@@ -17,7 +16,14 @@ export const securityHeaders = helmet({
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "blob:", "http:", "https:"],
-      connectSrc: ["'self'", "http://localhost:5000"],
+      connectSrc: [
+        "'self'",
+        "http://localhost:5000",
+        "*.vercel.app",
+        "*.onrender.com",
+        "https:",
+        "http:",
+      ],
       mediaSrc: ["'self'", "data:", "blob:"],
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [],
@@ -26,11 +32,16 @@ export const securityHeaders = helmet({
 });
 
 // --------------------------------------------------
-// CORS OPTIONS
+// CORS CONFIG
 // --------------------------------------------------
 export const corsOptions = {
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    /\.vercel\.app$/,
+    /\.onrender\.com$/,
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
 
@@ -41,11 +52,11 @@ export const rateLimiter = (max: number, windowMs: number) =>
   rateLimit({
     windowMs,
     max,
-    message: 'Too many requests, please try again later.',
+    message: "Too many requests, please try again later.",
   });
 
 // --------------------------------------------------
-// SANITIZE INPUT (XSS + HPP)
+// SANITIZATION (XSS + HPP)
 // --------------------------------------------------
 export const sanitizeInput = [xss(), hpp()];
 
@@ -54,14 +65,15 @@ export const sanitizeInput = [xss(), hpp()];
 // --------------------------------------------------
 export const validateRequired =
   (fields: string[]) =>
-  (req: Request, res: Response, next: NextFunction) => {
+  (req: Request, res: Response, next: NextFunction): void => {
     const missing = fields.filter((field) => !req.body[field]);
 
     if (missing.length > 0) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
-        message: `Missing required fields: ${missing.join(', ')}`,
+        message: `Missing required fields: ${missing.join(", ")}`,
       });
+      return;
     }
 
     next();
@@ -76,10 +88,10 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  console.error('❌ ERROR:', err);
+  console.error("❌ ERROR:", err);
 
   res.status(err.statusCode || 500).json({
     success: false,
-    message: err.message || 'Internal Server Error',
+    message: err.message || "Internal Server Error",
   });
 };

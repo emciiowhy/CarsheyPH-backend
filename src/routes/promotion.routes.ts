@@ -25,4 +25,4 @@ router.get("/", async (_req, res) => {
   }
 });
 
-export default router; // ← Required for ESM import
+module.exports = router; // ← Required for ESM import

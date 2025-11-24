@@ -87,4 +87,4 @@ router.delete("/:id", authenticateUser, requireAdmin, async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

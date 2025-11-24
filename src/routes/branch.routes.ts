@@ -23,4 +23,4 @@ router.get("/", async (_req, res, next) => {
   }
 });
 
-export default router; // ESM-friendly export
+module.exports = router; // ESM-friendly export

@@ -31,4 +31,4 @@ router.post("/", async (req, res) => {
   }
 });
 
-export default router; // Required for proper ESM import
+module.exports = router; // Required for proper ESM import

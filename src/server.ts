@@ -18,15 +18,15 @@ import {
 } from "./middleware/security.js";
 
 // Routes
-import vehicleRoutes from "./routes/vehicle.routes.js";
-import categoryRoutes from "./routes/category.routes.js";
-import inquiryRoutes from "./routes/inquiry.routes.js";
-import testDriveRoutes from "./routes/testDrive.routes.js";
-import financingRoutes from "./routes/financing.routes.js";
-import tradeInRoutes from "./routes/tradeIn.routes.js";
-import promotionRoutes from "./routes/promotion.routes.js";
-import uploadRoutes from "./routes/upload.routes.js";
-import branchRoutes from "./routes/branch.routes.js";
+const vehicleRoutes = require("./routes/vehicle.routes.js");
+const categoryRoutes = require("./routes/category.routes.js");
+const inquiryRoutes = require("./routes/inquiry.routes.js");
+const testDriveRoutes = require("./routes/testDrive.routes.js");
+const financingRoutes = require("./routes/financing.routes.js");
+const tradeInRoutes = require("./routes/tradeIn.routes.js");
+const promotionRoutes = require("./routes/promotion.routes.js");
+const uploadRoutes = require("./routes/upload.routes.js");
+const branchRoutes = require("./routes/branch.routes.js");
 
 dotenv.config();
 

@@ -55,4 +55,4 @@ router.get("/my-configs", async (req, res) => {
   }
 });
 
-export default router; // ESM-ready export
+module.exports = router; // ESM-ready export
